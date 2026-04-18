@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRIBE FILTER — Oferta Fundador</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
+  :root {
+    --green:#00ff88;--green-dim:#00cc6a;--green-dark:#00994f;
+    --bg:#050a0e;--bg2:#0a1520;--bg3:#0f1f30;--card:#0d1b2a;
+    --border:rgba(0,255,136,0.15);--text:#e8f4f0;--text-dim:#7a9e8e;
+    --red:#ff4466;--yellow:#ffcc00;--gold:#ffaa00;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;height:100vh;width:100vw;}
+  .slider{display:flex;width:1200vw;height:100vh;transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);}
+  .slide{width:100vw;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:72px 60px 96px;position:relative;overflow-y:auto;overflow-x:hidden;}
+  .slide.centered{justify-content:center;}
+  .slide::-webkit-scrollbar{width:4px;}
+  .slide::-webkit-scrollbar-thumb{background:rgba(0,255,136,0.3);border-radius:2px;}
+  .slide::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,136,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
+  .nav{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:100;align-items:center;background:rgba(10,21,32,0.85);border:1px solid var(--border);padding:12px 24px;border-radius:50px;backdrop-filter:blur(20px);}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(0,255,136,0.25);cursor:pointer;transition:all 0.3s;}
+  .dot.active{background:var(--green);width:24px;border-radius:4px;}
+  .nav-btn{background:none;border:none;color:var(--green);font-size:18px;cursor:pointer;padding:0 8px;opacity:0.7;transition:opacity 0.2s;}
+  .nav-btn:hover{opacity:1;}
+  .slide-counter{font-size:11px;color:var(--text-dim);font-family:'Space Grotesk',sans-serif;letter-spacing:2px;padding:0 8px;}
+  .logo-badge{position:fixed;top:24px;left:32px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;color:var(--green);letter-spacing:2px;z-index:100;display:flex;align-items:center;gap:8px;}
+  .logo-badge span{background:var(--green);color:var(--bg);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:1px;}
+  .aiox-badge{position:fixed;top:24px;right:32px;font-size:11px;color:var(--text-dim);z-index:100;letter-spacing:1px;font-family:'Space Grotesk',sans-serif;}
+  kbd{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:2px 6px;font-size:10px;font-family:monospace;}
+  .kbd-hint{position:fixed;top:26px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--text-dim);z-index:100;display:flex;gap:8px;align-items:center;}
+  @keyframes pulse{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}}
+  @keyframes spin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+  @keyframes countup{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+  @keyframes typing{0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-4px);opacity:1}}
+
+  /* ── SECTION HEADER ── */
+  .section-header{text-align:center;margin-bottom:28px;z-index:1;}
+  .section-tag{display:inline-block;background:rgba(0,255,136,0.1);border:1px solid var(--border);color:var(--green);font-size:10px;letter-spacing:3px;padding:6px 16px;border-radius:50px;font-weight:700;font-family:'Space Grotesk',sans-serif;margin-bottom:14px;}
+  .section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,3.8vw,42px);font-weight:700;line-height:1.2;}
+  .section-title .green{color:var(--green);}
+  .section-sub{font-size:15px;color:var(--text-dim);margin-top:10px;max-width:580px;margin-left:auto;margin-right:auto;line-height:1.6;}
+  .btn-primary{background:var(--green);color:var(--bg);border:none;padding:16px 36px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;letter-spacing:1px;transition:all 0.3s;}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,255,136,0.4);}
+  .btn-ghost{background:transparent;color:var(--green);border:1px solid var(--border);padding:16px 36px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:all 0.3s;}
+  .btn-ghost:hover{border-color:var(--green);background:rgba(0,255,136,0.05);}
+
+  /* ── SLIDE 1: HERO FUNDADOR ── */
+  .s1-orb{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,136,0.1) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:pulse 4s ease-in-out infinite;}
+  .s1-ring{position:absolute;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);}
+  .founder-badge{background:linear-gradient(135deg,rgba(255,170,0,0.15),rgba(255,170,0,0.05));border:1px solid rgba(255,170,0,0.4);color:var(--gold);font-size:11px;letter-spacing:3px;padding:8px 22px;border-radius:50px;font-weight:800;font-family:'Space Grotesk',sans-serif;margin-bottom:28px;animation:fadeUp 0.5s ease 0.2s both;display:inline-block;}
+  .hero-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(44px,6.5vw,88px);font-weight:800;line-height:0.95;text-align:center;margin-bottom:20px;animation:fadeUp 0.5s ease 0.35s both;}
+  .hero-title .green{color:var(--green);}
+  .hero-title .dim{color:var(--text-dim);}
+  .hero-sub{font-size:19px;color:var(--text-dim);text-align:center;max-width:580px;line-height:1.6;margin-bottom:36px;animation:fadeUp 0.5s ease 0.5s both;}
+  .vagas-counter{display:flex;align-items:center;gap:20px;background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.25);border-radius:16px;padding:16px 28px;margin-bottom:32px;animation:fadeUp 0.5s ease 0.65s both;}
+  .vagas-label{font-size:12px;color:var(--text-dim);letter-spacing:1px;}
+  .vagas-dots{display:flex;gap:6px;}
+  .vaga-dot{width:18px;height:18px;border-radius:50%;transition:all 0.3s;}
+  .vaga-dot.taken{background:var(--red);}
+  .vaga-dot.open{background:rgba(0,255,136,0.3);border:1px solid rgba(0,255,136,0.4);}
+  .vagas-text{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;}
+  .vagas-text span{color:var(--red);}
+  .hero-cta{display:flex;gap:14px;animation:fadeUp 0.5s ease 0.8s both;}
+
+  /* ── SLIDE 2: DOR ── */
+  .pain-hero{width:100%;max-width:1060px;z-index:1;}
+  .pain-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+  .pain-stat-card{background:var(--card);border:1px solid rgba(255,68,102,0.2);border-radius:16px;padding:24px;text-align:center;position:relative;overflow:hidden;}
+  .pain-stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),transparent);}
+  .pain-num{font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:800;color:var(--red);line-height:1;}
+  .pain-label{font-size:13px;color:var(--text-dim);margin-top:6px;line-height:1.4;}
+  .pain-quote{background:var(--card);border:1px solid rgba(255,68,102,0.15);border-radius:16px;padding:24px 32px;text-align:center;}
+  .pain-quote p{font-size:18px;color:var(--text-dim);font-style:italic;line-height:1.6;}
+  .pain-quote p strong{color:var(--text);}
+  .pain-who{margin-top:12px;font-size:13px;color:var(--green);font-weight:600;}
+
+  /* ── SLIDE 3: ROI NEGATIVO ── */
+  .roi-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1060px;z-index:1;}
+  .roi-card{background:var(--card);border-radius:20px;padding:28px;border:1px solid var(--border);}
+  .roi-card.bad{border-color:rgba(255,68,102,0.3);background:rgba(255,68,102,0.04);}
+  .roi-card.good{border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.04);}
+  .roi-card-title{font-size:11px;letter-spacing:2px;font-weight:700;margin-bottom:20px;font-family:'Space Grotesk',sans-serif;}
+  .roi-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .roi-row:last-child{border-bottom:none;}
+  .roi-row-label{font-size:13px;color:var(--text-dim);}
+  .roi-row-val{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;}
+
+  /* ── SLIDE 4: SOLUÇÃO (FLUXO) ── */
+  .flow-wrap{display:flex;align-items:stretch;gap:0;width:100%;max-width:1060px;z-index:1;}
+  .flow-step{flex:1;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 18px;text-align:center;position:relative;}
+  .flow-step.ai{border-color:rgba(0,255,136,0.4);background:rgba(0,255,136,0.05);}
+  .flow-arrow{width:36px;text-align:center;color:var(--green);font-size:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .flow-icon{font-size:28px;margin-bottom:10px;display:block;}
+  .flow-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;}
+  .flow-desc{font-size:11px;color:var(--text-dim);line-height:1.5;}
+  .flow-badge{position:absolute;top:-10px;right:10px;background:var(--green);color:var(--bg);font-size:9px;font-weight:800;padding:2px 8px;border-radius:20px;font-family:'Space Grotesk',sans-serif;letter-spacing:1px;}
+  .feature-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;width:100%;max-width:1060px;margin-top:20px;z-index:1;}
+  .feature-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 16px;display:flex;align-items:flex-start;gap:12px;}
+  .fi-icon{width:36px;height:36px;background:rgba(0,255,136,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .fi-title{font-size:12px;font-weight:700;margin-bottom:4px;}
+  .fi-desc{font-size:11px;color:var(--text-dim);line-height:1.4;}
+
+  /* ── SLIDE 5: BOT WPP ── */
+  .bot-layout{display:grid;grid-template-columns:1fr 1fr;gap:32px;width:100%;max-width:1000px;z-index:1;}
+  .phone-mockup{background:#111;border:2px solid #2a2a2a;border-radius:28px;overflow:hidden;max-width:290px;margin:0 auto;}
+  .phone-header{background:#1a1a2e;padding:13px 15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #222;}
+  .phone-avatar{width:32px;height:32px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--bg);}
+  .phone-name{font-size:12px;font-weight:700;}
+  .phone-status{font-size:10px;color:var(--green);}
+  .chat-area{background:#0d1117;padding:12px;min-height:300px;display:flex;flex-direction:column;gap:8px;}
+  .msg{max-width:82%;padding:9px 13px;border-radius:12px;font-size:11.5px;line-height:1.5;}
+  .msg-bot{background:#1e2d3d;color:var(--text);align-self:flex-start;border-bottom-left-radius:3px;}
+  .msg-user{background:rgba(0,255,136,0.14);color:var(--text);align-self:flex-end;border-bottom-right-radius:3px;}
+  .typing{display:flex;gap:4px;padding:11px 15px;background:#1e2d3d;border-radius:12px;width:fit-content;border-bottom-left-radius:3px;align-self:flex-start;}
+  .typing-dot{width:5px;height:5px;background:var(--text-dim);border-radius:50%;animation:typing 1.4s ease infinite;}
+  .typing-dot:nth-child(2){animation-delay:0.2s;}
+  .typing-dot:nth-child(3){animation-delay:0.4s;}
+  .bot-features{display:flex;flex-direction:column;gap:14px;justify-content:center;}
+  .bot-feature{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:14px;}
+  .bf-icon{width:38px;height:38px;background:rgba(0,255,136,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+  .bf-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+  .bf-desc{font-size:11px;color:var(--text-dim);line-height:1.4;}
+
+  /* ── SLIDE 6: DASHBOARD ── */
+  .dash-layout{width:100%;max-width:1060px;z-index:1;}
+  .dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;position:relative;overflow:hidden;}
+  .stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--green);transform:scaleX(0.4);transform-origin:left;}
+  .stat-label{font-size:10px;color:var(--text-dim);letter-spacing:1px;margin-bottom:6px;}
+  .stat-value{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:800;color:var(--green);}
+  .stat-change{font-size:10px;color:var(--green);margin-top:3px;}
+  .dash-bottom{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .dash-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;}
+  .panel-title{font-size:11px;font-weight:700;color:var(--text-dim);letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .panel-title::before{content:'';width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 2s ease infinite;flex-shrink:0;}
+  .group-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .group-row:last-child{border-bottom:none;}
+  .group-icon{width:28px;height:28px;background:rgba(0,255,136,0.1);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+  .group-name{font-size:12px;font-weight:600;flex:1;}
+  .group-bar-bg{flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;}
+  .group-bar{height:100%;background:var(--green);border-radius:2px;}
+  .group-count{font-size:10px;color:var(--text-dim);}
+  .approval-item{display:flex;align-items:center;gap:10px;padding:9px 11px;background:rgba(255,255,255,0.03);border-radius:10px;margin-bottom:7px;}
+  .approval-avatar{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+  .approval-name{font-size:12px;font-weight:600;flex:1;}
+  .approval-score{font-size:11px;font-weight:700;font-family:'Space Grotesk',sans-serif;}
+  .approve-btn,.reject-btn{border:none;border-radius:6px;padding:4px 9px;font-size:10px;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;}
+  .approve-btn{background:rgba(0,255,136,0.15);color:var(--green);}
+  .reject-btn{background:rgba(255,68,102,0.15);color:var(--red);}
+
+  /* ── SLIDE 7: A OFERTA ── */
+  .offer-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1060px;z-index:1;}
+  .plan-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:32px 28px;position:relative;overflow:hidden;}
+  .plan-card.founder{border-color:rgba(255,170,0,0.5);background:linear-gradient(145deg,rgba(255,170,0,0.07),var(--card));}
+  .plan-card.founder::before{content:'⚡ OFERTA FUNDADOR — SOMENTE AGORA';position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;font-size:9px;font-weight:800;padding:4px 18px;border-radius:0 0 10px 10px;letter-spacing:1px;white-space:nowrap;font-family:'Space Grotesk',sans-serif;}
+  .plan-card.normal::after{content:'PREÇO APÓS LANÇAMENTO';position:absolute;top:12px;right:12px;background:rgba(255,68,102,0.15);color:var(--red);font-size:8px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:1px;}
+  .plan-name-tag{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:13px;letter-spacing:2px;color:var(--text-dim);margin-bottom:14px;margin-top:18px;}
+  .plan-price-block{margin-bottom:8px;}
+  .plan-price-old{font-size:22px;color:var(--red);text-decoration:line-through;font-family:'Space Grotesk',sans-serif;font-weight:700;opacity:0.7;}
+  .plan-price-new{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:56px;color:var(--gold);line-height:1;}
+  .plan-price-new.normal-price{color:var(--red);}
+  .plan-price-period{font-size:14px;color:var(--text-dim);}
+  .plan-forever{font-size:12px;color:var(--gold);font-weight:700;margin-bottom:6px;}
+  .plan-upfront{background:rgba(255,170,0,0.1);border:1px solid rgba(255,170,0,0.25);border-radius:10px;padding:10px 16px;margin:14px 0;display:flex;justify-content:space-between;align-items:center;}
+  .plan-upfront-label{font-size:12px;color:var(--text-dim);}
+  .plan-upfront-val{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:20px;color:var(--gold);}
+  .plan-divider{border:none;border-top:1px solid rgba(255,255,255,0.06);margin:18px 0;}
+  .plan-features{list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .plan-features li{font-size:13px;color:var(--text-dim);display:flex;align-items:center;gap:9px;}
+  .plan-features li::before{content:'✓';color:var(--green);font-weight:700;font-size:12px;flex-shrink:0;}
+  .plan-savings{background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:12px 16px;text-align:center;margin-top:16px;}
+  .plan-savings-num{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:24px;color:var(--green);}
+  .plan-savings-label{font-size:11px;color:var(--text-dim);}
+
+  /* ── SLIDE 8: O MATH ── */
+  .math-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1060px;z-index:1;}
+  .math-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;}
+  .math-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;color:var(--text-dim);margin-bottom:20px;}
+  .math-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .math-row:last-child{border-bottom:none;}
+  .math-row-label{font-size:13px;color:var(--text-dim);}
+  .math-row-val{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;}
+  .math-total{background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:14px;padding:18px;margin-top:14px;text-align:center;}
+  .math-total-label{font-size:12px;color:var(--text-dim);margin-bottom:4px;}
+  .math-total-val{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:36px;color:var(--green);}
+  .math-total-sub{font-size:12px;color:var(--text-dim);margin-top:4px;}
+
+  /* ── SLIDE 9: PARCERIA ── */
+  .partnership-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1060px;z-index:1;}
+  .partner-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;}
+  .partner-card.highlight{border-color:rgba(0,255,136,0.4);background:rgba(0,255,136,0.04);}
+  .partner-step{display:flex;align-items:flex-start;gap:16px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+  .partner-step:last-child{border-bottom:none;}
+  .partner-num{width:32px;height:32px;background:rgba(0,255,136,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:14px;color:var(--green);flex-shrink:0;}
+  .partner-step-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+  .partner-step-desc{font-size:12px;color:var(--text-dim);line-height:1.4;}
+  .commission-box{background:rgba(255,170,0,0.08);border:1px solid rgba(255,170,0,0.3);border-radius:16px;padding:22px;text-align:center;margin-top:18px;}
+  .commission-label{font-size:12px;color:var(--text-dim);margin-bottom:8px;}
+  .commission-val{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:42px;color:var(--gold);}
+  .commission-sub{font-size:12px;color:var(--text-dim);margin-top:6px;}
+
+  /* ── SLIDE 10: GARANTIA ── */
+  .guarantee-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1060px;z-index:1;}
+  .guarantee-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;}
+  .guarantee-item{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+  .guarantee-item:last-child{border-bottom:none;}
+  .g-icon{width:40px;height:40px;background:rgba(0,255,136,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .g-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+  .g-desc{font-size:12px;color:var(--text-dim);line-height:1.4;}
+  .roadmap-mini{display:flex;flex-direction:column;gap:14px;}
+  .roadmap-item{display:flex;align-items:center;gap:14px;padding:14px 16px;background:rgba(255,255,255,0.03);border-radius:12px;border-left:3px solid;}
+  .roadmap-item.done{border-color:var(--green);}
+  .roadmap-item.building{border-color:var(--yellow);}
+  .roadmap-item.soon{border-color:rgba(255,255,255,0.15);}
+  .roadmap-phase{font-size:10px;font-weight:700;letter-spacing:1px;font-family:'Space Grotesk',sans-serif;min-width:60px;}
+  .roadmap-desc{font-size:13px;flex:1;}
+  .roadmap-date{font-size:11px;color:var(--text-dim);}
+
+  /* ── SLIDE 11: OUTROS FUNDADORES ── */
+  .founders-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:100%;max-width:1060px;z-index:1;}
+  .founder-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;overflow:hidden;}
+  .founder-card.featured{border-color:rgba(255,170,0,0.4);background:linear-gradient(145deg,rgba(255,170,0,0.06),var(--card));}
+  .founder-card.featured::before{content:'VOCÊ';position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;font-size:9px;font-weight:800;padding:3px 16px;border-radius:0 0 8px 8px;letter-spacing:1px;}
+  .founder-avatar{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:14px;margin-top:10px;}
+  .founder-name{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:18px;margin-bottom:4px;}
+  .founder-role{font-size:12px;color:var(--text-dim);margin-bottom:16px;}
+  .founder-plan{font-size:10px;letter-spacing:2px;font-weight:700;color:var(--green);font-family:'Space Grotesk',sans-serif;margin-bottom:6px;}
+  .founder-price{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:30px;color:var(--gold);}
+  .founder-price sub{font-size:12px;color:var(--text-dim);font-weight:400;}
+  .founder-upfront{font-size:12px;color:var(--text-dim);margin-top:4px;}
+  .founder-upfront strong{color:var(--green);}
+  .founder-why{background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.1);border-radius:10px;padding:10px 14px;margin-top:14px;font-size:12px;color:var(--text-dim);line-height:1.5;}
+
+  /* ── SLIDE 12: CTA FINAL ── */
+  .cta-orb{position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,136,0.07) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:pulse 3s ease-in-out infinite;}
+  .cta-ring{position:absolute;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:spin 25s linear infinite;}
+  .cta-content{text-align:center;max-width:820px;z-index:1;}
+  .cta-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(38px,5.5vw,74px);font-weight:800;line-height:1.05;margin-bottom:20px;}
+  .cta-sub{font-size:18px;color:var(--text-dim);margin-bottom:32px;line-height:1.6;}
+  .urgency-box{display:inline-flex;align-items:center;gap:16px;background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.3);border-radius:16px;padding:14px 24px;margin-bottom:32px;}
+  .urgency-box .num{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:36px;color:var(--red);}
+  .urgency-box .txt{text-align:left;font-size:13px;color:var(--text-dim);line-height:1.4;}
+  .urgency-box .txt strong{color:var(--text);}
+  .vagas-visual{display:flex;gap:8px;justify-content:center;margin-bottom:32px;}
+  .vaga-v{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .vaga-v.tomado{background:rgba(255,68,102,0.2);border:1px solid rgba(255,68,102,0.3);}
+  .vaga-v.livre{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.25);}
+  .cta-buttons{display:flex;gap:16px;justify-content:center;margin-bottom:28px;}
+  .btn-gold{background:linear-gradient(135deg,#ffcc00,#ff9900);color:#000;border:none;padding:18px 44px;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Space Grotesk',sans-serif;letter-spacing:1px;transition:all 0.3s;}
+  .btn-gold:hover{transform:translateY(-3px);box-shadow:0 10px 40px rgba(255,170,0,0.4);}
+  .cta-note{font-size:13px;color:var(--text-dim);}
+</style>
+</head>
+<body>
+
+<div class="logo-badge">TRIBE FILTER <span>PRÉ-VENDA</span></div>
+<div class="aiox-badge">POWERED BY AIOX PRO</div>
+<div class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> navegar</div>
+
+<div class="slider" id="slider">
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 1 — HERO FUNDADOR
+══════════════════════════════════════════════════════════ -->
+<div class="slide centered">
+  <div class="s1-orb"></div>
+  <div class="s1-ring" style="width:800px;height:800px;border:1px solid rgba(0,255,136,0.05);animation:spin 20s linear infinite;"></div>
+  <div class="s1-ring" style="width:600px;height:600px;border:1px solid rgba(0,255,136,0.04);animation:spin 14s linear infinite reverse;"></div>
+
+  <div class="founder-badge">🏆 OFERTA FUNDADOR — PRODUTO LANÇA EM 60 DIAS</div>
+
+  <h1 class="hero-title">
+    Automatize seus grupos.<br>
+    Pague <span class="green">metade</span><br>
+    <span class="dim">para sempre.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Primeiros <strong style="color:var(--text)">10 clientes fundadores</strong> travam 50% de desconto VITALÍCIO.<br>
+    Produto entrega em 60 dias. Você paga agora, ganha para sempre.
+  </p>
+
+  <div class="vagas-counter">
+    <div>
+      <div class="vagas-label">VAGAS FUNDADOR</div>
+      <div class="vagas-text"><span>3</span> de 10 já ocupadas</div>
+    </div>
+    <div class="vagas-dots">
+      <div class="vaga-dot taken"></div>
+      <div class="vaga-dot taken"></div>
+      <div class="vaga-dot taken"></div>
+      <div class="vaga-dot open"></div>
+      <div class="vaga-dot open"></div>
+      <div class="vaga-dot open"></div>
+      <div class="vaga-dot open"></div>
+      <div class="vaga-dot open"></div>
+      <div class="vaga-dot open"></div>
+      <div class="vaga-dot open"></div>
+    </div>
+  </div>
+
+  <div class="hero-cta">
+    <button class="btn-gold" onclick="goTo(6)">Ver a oferta completa →</button>
+    <button class="btn-ghost" onclick="goTo(1)">Entender o produto</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 2 — A DOR (FERNANDO)
+══════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="section-header">
+    <div class="section-tag">O PROBLEMA</div>
+    <h2 class="section-title">385 grupos. <span class="green">Zero automação.</span></h2>
+    <p class="section-sub">Uma das maiores redes de grupos de networking do Brasil — gerida 100% na mão.</p>
+  </div>
+
+  <div class="pain-hero">
+    <div class="pain-stat-row">
+      <div class="pain-stat-card">
+        <div class="pain-num">385</div>
+        <div class="pain-label">grupos geridos manualmente todos os dias</div>
+      </div>
+      <div class="pain-stat-card">
+        <div class="pain-num">∞</div>
+        <div class="pain-label">horas gastas em triagem, entrevistas e rejeições</div>
+      </div>
+      <div class="pain-stat-card">
+        <div class="pain-num">0</div>
+        <div class="pain-label">escalabilidade com o processo atual</div>
+      </div>
+    </div>
+    <div class="pain-quote">
+      <p>"Fatura <strong>R$20k–45k/mês</strong> só no orgânico — mas está no <strong>limite absoluto da capacidade.</strong> Para crescer, precisa de um sistema que trabalhe enquanto você dorme."</p>
+      <div class="pain-who">→ Fernando Paixão — Mentor / Empresário / Networking King</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 3 — ROI NEGATIVO (QUANTO ESTÁ PERDENDO)
+══════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="section-header">
+    <div class="section-tag">O CUSTO DA INAÇÃO</div>
+    <h2 class="section-title">Quanto você perde <span class="green">todo mês sem automação</span></h2>
+    <p class="section-sub">Gestão manual tem custo invisível. Esse é o cálculo real.</p>
+  </div>
+
+  <div class="roi-layout">
+    <div class="roi-card bad">
+      <div class="roi-card-title" style="color:var(--red)">📉 HOJE — SEM TRIBE FILTER</div>
+      <div class="roi-row">
+        <span class="roi-row-label">Horas/semana em triagem</span>
+        <span class="roi-row-val" style="color:var(--red)">20h+</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-row-label">Leads qualificados/mês</span>
+        <span class="roi-row-val" style="color:var(--red)">~60</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-row-label">Spam que passa pelos grupos</span>
+        <span class="roi-row-val" style="color:var(--red)">Alto</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-row-label">Grupos que você consegue escalar</span>
+        <span class="roi-row-val" style="color:var(--red)">Travado</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-row-label">Receita potencial desperdiçada/mês</span>
+        <span class="roi-row-val" style="color:var(--red)">R$15k+</span>
+      </div>
+    </div>
+    <div class="roi-card good">
+      <div class="roi-card-title" style="color:var(--green)">📈 COM TRIBE FILTER</div>
+      <div class="roi-row">
+        <span class="roi-row-label">Horas/semana em triagem</span>
+        <span class="roi-row-val" style="color:var(--green)">0h</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-row-label">Leads qualificados/mês</span>
+        <span class="roi-row-val" style="color:var(--green)">Ilimitado</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-row-label">Spam que passa pelos grupos</span>
+        <span class="roi-row-val" style="color:var(--green)">Zero</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-row-label">Grupos que você consegue escalar</span>
+        <span class="roi-row-val" style="color:var(--green)">Infinito</span>
+      </div>
+      <div class="roi-row">
+        <span class="roi-row-label">Receita adicional desbloqueada</span>
+        <span class="roi-row-val" style="color:var(--green)">R$30k+/mês</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 4 — COMO FUNCIONA
+══════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="section-header">
+    <div class="section-tag">A SOLUÇÃO</div>
+    <h2 class="section-title">Funil de qualificação <span class="green">100% automático</span></h2>
+    <p class="section-sub">Do candidato ao grupo aprovado — zero intervenção humana.</p>
+  </div>
+
+  <div class="flow-wrap" style="z-index:1">
+    <div class="flow-step">
+      <span class="flow-icon">🔗</span>
+      <div class="flow-title">Link de Entrada</div>
+      <div class="flow-desc">Candidato clica no link personalizado do grupo</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step ai">
+      <span class="flow-icon">📋</span>
+      <div class="flow-title">Formulário IA</div>
+      <div class="flow-desc">Perguntas adaptativas geradas por IA em tempo real</div>
+      <div class="flow-badge">IA</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step ai">
+      <span class="flow-icon">🤖</span>
+      <div class="flow-title">Bot WhatsApp</div>
+      <div class="flow-desc">Entrevista 1:1 via WhatsApp, valida fit e detecta fake</div>
+      <div class="flow-badge">IA</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step ai">
+      <span class="flow-icon">⚡</span>
+      <div class="flow-title">Score 0–100</div>
+      <div class="flow-desc">Aprovado &gt;70 automático. Revisão 50–70. Rejeitado &lt;50.</div>
+      <div class="flow-badge">IA</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <span class="flow-icon">✅</span>
+      <div class="flow-title">Grupo Aprovado</div>
+      <div class="flow-desc">Link enviado automaticamente com boas-vindas personalizado</div>
+    </div>
+  </div>
+
+  <div class="feature-row">
+    <div class="feature-item">
+      <div class="fi-icon">🧠</div>
+      <div><div class="fi-title">Claude AI</div><div class="fi-desc">O modelo mais avançado do mundo avalia cada candidato</div></div>
+    </div>
+    <div class="feature-item">
+      <div class="fi-icon">📱</div>
+      <div><div class="fi-title">WhatsApp Nativo</div><div class="fi-desc">Bot integrado via Evolution API, sem apps extras</div></div>
+    </div>
+    <div class="feature-item">
+      <div class="fi-icon">🛡️</div>
+      <div><div class="fi-title">Anti-spam 24/7</div><div class="fi-desc">IA monitora o grupo e age antes do spam se espalhar</div></div>
+    </div>
+    <div class="feature-item">
+      <div class="fi-icon">📊</div>
+      <div><div class="fi-title">Dashboard Central</div><div class="fi-desc">Todos os grupos, leads e análises em um só painel</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 5 — BOT DEMO
+══════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="section-header">
+    <div class="section-tag">ENTREVISTA AUTOMATIZADA</div>
+    <h2 class="section-title">O bot entrevista <span class="green">como um humano</span></h2>
+    <p class="section-sub">Cada conversa é única, adaptada ao candidato e ao perfil do grupo.</p>
+  </div>
+  <div class="bot-layout">
+    <div class="phone-mockup">
+      <div class="phone-header">
+        <div class="phone-avatar">🤖</div>
+        <div>
+          <div class="phone-name">Tribe Filter Bot</div>
+          <div class="phone-status">● online agora</div>
+        </div>
+      </div>
+      <div class="chat-area">
+        <div class="msg msg-bot">Olá! 👋 Recebi seu interesse no grupo <strong>Network Premium</strong>.<br><br>Sou o assistente de qualificação. Vou fazer <strong>4 perguntas rápidas</strong> — pode ser?</div>
+        <div class="msg msg-user">Claro! Pode começar 😊</div>
+        <div class="msg msg-bot">Ótimo! <strong>Qual é a sua área de atuação e há quanto tempo você está nesse mercado?</strong></div>
+        <div class="msg msg-user">Sou mentor de negócios há 8 anos, especializado em escalar comunidades e grupos de networking.</div>
+        <div class="msg msg-bot">Excelente! Experiência sólida e super relevante para o grupo. 🎯<br><br><strong>Como você pode contribuir com os demais membros da comunidade?</strong></div>
+        <div class="typing">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="bot-features">
+      <div class="bot-feature">
+        <div class="bf-icon">🧠</div>
+        <div>
+          <div class="bf-title">Perguntas Adaptativas</div>
+          <div class="bf-desc">IA ajusta as perguntas conforme as respostas — cada entrevista é única e personalizada ao perfil.</div>
+        </div>
+      </div>
+      <div class="bot-feature">
+        <div class="bf-icon">🎭</div>
+        <div>
+          <div class="bf-title">Detecção de Fake & Spam</div>
+          <div class="bf-desc">Identifica respostas genéricas, bots e perfis falsos com alta precisão antes de entrar no grupo.</div>
+        </div>
+      </div>
+      <div class="bot-feature">
+        <div class="bf-icon">⚡</div>
+        <div>
+          <div class="bf-title">Resposta em &lt; 4 min</div>
+          <div class="bf-desc">Do candidato ao resultado final: aprovação automática ou notificação ao admin em menos de 4 minutos.</div>
+        </div>
+      </div>
+      <div class="bot-feature">
+        <div class="bf-icon">📋</div>
+        <div>
+          <div class="bf-title">Relatório Completo</div>
+          <div class="bf-desc">Score, análise detalhada, pontos fortes e pontos de atenção — tudo salvo no dashboard.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 6 — DASHBOARD
+══════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="section-header">
+    <div class="section-tag">DASHBOARD CENTRAL</div>
+    <h2 class="section-title">Gerencie <span class="green">todos os grupos</span> em um só lugar</h2>
+  </div>
+  <div class="dash-layout">
+    <div class="dash-stats">
+      <div class="stat-card"><div class="stat-label">GRUPOS ATIVOS</div><div class="stat-value">47</div><div class="stat-change">↑ +3 esta semana</div></div>
+      <div class="stat-card"><div class="stat-label">LEADS FILTRADOS</div><div class="stat-value">1.2k</div><div class="stat-change">↑ +18% este mês</div></div>
+      <div class="stat-card"><div class="stat-label">TAXA APROVAÇÃO</div><div class="stat-value">68%</div><div class="stat-change">↑ Qualidade alta</div></div>
+      <div class="stat-card"><div class="stat-label">SPAM BLOQUEADO</div><div class="stat-value">312</div><div class="stat-change">↑ Esta semana</div></div>
+    </div>
+    <div class="dash-bottom">
+      <div class="dash-panel">
+        <div class="panel-title">TOP GRUPOS</div>
+        <div class="group-row"><div class="group-icon">💎</div><div class="group-name">Network Premium</div><div class="group-bar-bg"><div class="group-bar" style="width:92%"></div></div><div class="group-count">247</div></div>
+        <div class="group-row"><div class="group-icon">🚀</div><div class="group-name">Scale Mastermind</div><div class="group-bar-bg"><div class="group-bar" style="width:78%"></div></div><div class="group-count">189</div></div>
+        <div class="group-row"><div class="group-icon">🏆</div><div class="group-name">Empresárias VIP</div><div class="group-bar-bg"><div class="group-bar" style="width:65%"></div></div><div class="group-count">156</div></div>
+        <div class="group-row"><div class="group-icon">🌎</div><div class="group-name">Coliseu Premium</div><div class="group-bar-bg"><div class="group-bar" style="width:54%"></div></div><div class="group-count">132</div></div>
+      </div>
+      <div class="dash-panel">
+        <div class="panel-title">APROVAÇÕES PENDENTES</div>
+        <div class="approval-item"><div class="approval-avatar" style="background:rgba(0,255,136,0.1)">👩</div><div class="approval-name">Mariana Costa</div><div class="approval-score" style="color:var(--yellow)">63pts</div><button class="approve-btn">✓</button><button class="reject-btn">✕</button></div>
+        <div class="approval-item"><div class="approval-avatar" style="background:rgba(0,170,255,0.1)">👨</div><div class="approval-name">Roberto Alves</div><div class="approval-score" style="color:var(--yellow)">58pts</div><button class="approve-btn">✓</button><button class="reject-btn">✕</button></div>
+        <div class="approval-item"><div class="approval-avatar" style="background:rgba(0,255,136,0.1)">👩</div><div class="approval-name">Fernanda Lima</div><div class="approval-score" style="color:var(--green)">71pts</div><button class="approve-btn">✓</button><button class="reject-btn">✕</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 7 — A OFERTA FUNDADOR
+══════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="section-header">
+    <div class="section-tag">OFERTA FUNDADOR</div>
+    <h2 class="section-title">50% de desconto. <span class="green">Para sempre.</span></h2>
+    <p class="section-sub">Somente para os primeiros 10 clientes. Sem reajuste. Sem exceção.</p>
+  </div>
+
+  <div class="offer-layout">
+    <div class="plan-card normal">
+      <div class="plan-name-tag">PLANO PRO</div>
+      <div class="plan-price-block">
+        <div class="plan-price-old">R$ 997/mês</div>
+        <div class="plan-price-new">R$497<span style="font-size:18px;color:var(--text-dim);font-weight:400">/mês</span></div>
+      </div>
+      <div class="plan-forever">🔒 VITALÍCIO — nunca sobe</div>
+      <div class="plan-upfront">
+        <div class="plan-upfront-label">6 meses adiantado</div>
+        <div class="plan-upfront-val">R$ 2.982</div>
+      </div>
+      <hr class="plan-divider">
+      <ul class="plan-features">
+        <li>Até 15 grupos</li>
+        <li>300 leads qualificados/mês</li>
+        <li>Bot entrevistador WhatsApp</li>
+        <li>Anti-spam avançado</li>
+        <li>Dashboard completo</li>
+        <li>Suporte prioritário</li>
+      </ul>
+      <div class="plan-savings">
+        <div class="plan-savings-num">R$ 6.000</div>
+        <div class="plan-savings-label">economizados no primeiro ano</div>
+      </div>
+    </div>
+
+    <div class="plan-card founder">
+      <div class="plan-name-tag">ENTERPRISE</div>
+      <div class="plan-price-block">
+        <div class="plan-price-old">R$ 2.997/mês</div>
+        <div class="plan-price-new" style="color:var(--gold)">R$1.497<span style="font-size:18px;color:var(--text-dim);font-weight:400">/mês</span></div>
+      </div>
+      <div class="plan-forever" style="color:var(--gold)">🔒 VITALÍCIO — nunca sobe</div>
+      <div class="plan-upfront" style="background:rgba(255,170,0,0.1);border-color:rgba(255,170,0,0.3)">
+        <div class="plan-upfront-label">6 meses adiantado</div>
+        <div class="plan-upfront-val">R$ 8.982</div>
+      </div>
+      <hr class="plan-divider">
+      <ul class="plan-features">
+        <li>Grupos ilimitados</li>
+        <li>Leads ilimitados</li>
+        <li>White label — sua marca</li>
+        <li>Customizações exclusivas</li>
+        <li>Integração CRM</li>
+        <li>Gerente de conta dedicado</li>
+        <li>Comissão vitalícia por indicações</li>
+      </ul>
+      <div class="plan-savings" style="background:rgba(255,170,0,0.08);border-color:rgba(255,170,0,0.25)">
+        <div class="plan-savings-num" style="color:var(--gold)">R$ 18.000</div>
+        <div class="plan-savings-label">economizados no primeiro ano</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 8 — O MATH DO INVESTIMENTO
+══════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="section-header">
+    <div class="section-tag">O MATH</div>
+    <h2 class="section-title">R$ 8.982 hoje. <span class="green">Retorno em dias.</span></h2>
+    <p class="section-sub">Calculando com base nos números reais de quem tem 385 grupos.</p>
+  </div>
+
+  <div class="math-layout">
+    <div class="math-card">
+      <div class="math-title">💰 INVESTIMENTO (Enterprise Fundador)</div>
+      <div class="math-row"><span class="math-row-label">6 meses adiantado</span><span class="math-row-val" style="color:var(--gold)">R$ 8.982</span></div>
+      <div class="math-row"><span class="math-row-label">Custo mensal equivalente</span><span class="math-row-val" style="color:var(--gold)">R$ 1.497/mês</span></div>
+      <div class="math-row"><span class="math-row-label">Preço após lançamento</span><span class="math-row-val" style="color:var(--red);text-decoration:line-through">R$ 2.997/mês</span></div>
+      <div class="math-row"><span class="math-row-label">Desconto vitalício garantido</span><span class="math-row-val" style="color:var(--green)">50% para sempre</span></div>
+      <div class="math-total">
+        <div class="math-total-label">Economia no 1º ano</div>
+        <div class="math-total-val">R$ 18.000</div>
+        <div class="math-total-sub">só de diferença de preço em relação ao plano normal</div>
+      </div>
+    </div>
+
+    <div class="math-card">
+      <div class="math-title">📈 RETORNO (cenário conservador)</div>
+      <div class="math-row"><span class="math-row-label">Grupos que você pode automatizar</span><span class="math-row-val" style="color:var(--text)">50+</span></div>
+      <div class="math-row"><span class="math-row-label">Ticket médio de entrada por grupo</span><span class="math-row-val" style="color:var(--text)">R$ 97–297</span></div>
+      <div class="math-row"><span class="math-row-label">Leads aprovados/mês com automação</span><span class="math-row-val" style="color:var(--green)">500+</span></div>
+      <div class="math-row"><span class="math-row-label">Receita adicional desbloqueada/mês</span><span class="math-row-val" style="color:var(--green)">R$ 30k+</span></div>
+      <div class="math-row"><span class="math-row-label">Horas liberadas por semana</span><span class="math-row-val" style="color:var(--green)">20h+</span></div>
+      <div class="math-total">
+        <div class="math-total-label">Retorno sobre investimento</div>
+        <div class="math-total-val">+3.000%</div>
+        <div class="math-total-sub">R$ 8.982 investidos → R$ 30k+ liberados no 1º mês</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 9 — PROPOSTA DE PARCERIA
+══════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="section-header">
+    <div class="section-tag">PROPOSTA ESPECIAL</div>
+    <h2 class="section-title">Você não é só cliente. <span class="green">É sócio fundador.</span></h2>
+    <p class="section-sub">Enterprise Fundador vem com um modelo de parceria exclusivo.</p>
+  </div>
+
+  <div class="partnership-layout">
+    <div class="partner-card highlight">
+      <div style="font-size:13px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:18px;">🤝 COMO FUNCIONA A PARCERIA</div>
+      <div class="partner-step">
+        <div class="partner-num">1</div>
+        <div>
+          <div class="partner-step-title">Você assina Enterprise Fundador</div>
+          <div class="partner-step-desc">R$ 1.497/mês vitalício — 6 meses adiantado = R$ 8.982</div>
+        </div>
+      </div>
+      <div class="partner-step">
+        <div class="partner-num">2</div>
+        <div>
+          <div class="partner-step-title">Você usa o produto nos seus grupos</div>
+          <div class="partner-step-desc">Automatiza triagem, escala grupos, libera seu tempo</div>
+        </div>
+      </div>
+      <div class="partner-step">
+        <div class="partner-num">3</div>
+        <div>
+          <div class="partner-step-title">Você indica para a sua rede</div>
+          <div class="partner-step-desc">Cada cliente que você trouxer gera comissão vitalícia para você</div>
+        </div>
+      </div>
+      <div class="partner-step">
+        <div class="partner-num">4</div>
+        <div>
+          <div class="partner-step-title">Você recebe para sempre</div>
+          <div class="partner-step-desc">Enquanto o cliente estiver ativo, você recebe. Sem limite de indicações.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="partner-card">
+      <div style="font-size:13px;font-weight:700;color:var(--text-dim);letter-spacing:1px;margin-bottom:18px;">💸 SIMULAÇÃO DE GANHOS</div>
+      <div class="math-row"><span class="math-row-label">Comissão por cliente indicado</span><span class="math-row-val" style="color:var(--green)">20% vitalício</span></div>
+      <div class="math-row"><span class="math-row-label">1 cliente PRO indicado</span><span class="math-row-val" style="color:var(--green)">+R$ 99/mês para sempre</span></div>
+      <div class="math-row"><span class="math-row-label">1 cliente Enterprise indicado</span><span class="math-row-val" style="color:var(--gold)">+R$ 299/mês para sempre</span></div>
+      <div class="math-row"><span class="math-row-label">5 clientes indicados</span><span class="math-row-val" style="color:var(--green)">R$ 1.500+/mês passivo</span></div>
+      <div class="math-row"><span class="math-row-label">10 clientes indicados</span><span class="math-row-val" style="color:var(--green)">R$ 3.000+/mês passivo</span></div>
+      <div class="commission-box">
+        <div class="commission-label">Com 10 indicações, você cobre o investimento em</div>
+        <div class="commission-val">3 meses</div>
+        <div class="commission-sub">e depois é puro lucro — para sempre</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 10 — GARANTIA & ROADMAP
+══════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="section-header">
+    <div class="section-tag">SEGURANÇA TOTAL</div>
+    <h2 class="section-title">Você está <span class="green">100% protegido.</span></h2>
+    <p class="section-sub">Produto entrega em 60 dias ou você recebe seu dinheiro de volta.</p>
+  </div>
+
+  <div class="guarantee-layout">
+    <div class="guarantee-card">
+      <div style="font-size:13px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:16px;">🛡️ GARANTIAS DO FUNDADOR</div>
+      <div class="guarantee-item">
+        <div class="g-icon">💰</div>
+        <div>
+          <div class="g-title">Garantia de devolução total</div>
+          <div class="g-desc">Se o produto não entregar em 60 dias, devolvemos 100% do valor. Sem burocracia.</div>
+        </div>
+      </div>
+      <div class="guarantee-item">
+        <div class="g-icon">🔒</div>
+        <div>
+          <div class="g-title">Preço travado para sempre</div>
+          <div class="g-desc">Contrato assinado garante que seu preço nunca sobe, independente de reajustes futuros.</div>
+        </div>
+      </div>
+      <div class="guarantee-item">
+        <div class="g-icon">🎯</div>
+        <div>
+          <div class="g-title">Onboarding dedicado</div>
+          <div class="g-desc">Fundadores têm setup personalizado, treinamento 1:1 e acesso direto ao time técnico.</div>
+        </div>
+      </div>
+      <div class="guarantee-item">
+        <div class="g-icon">⚡</div>
+        <div>
+          <div class="g-title">Prioridade em features</div>
+          <div class="g-desc">Suas sugestões entram primeiro no roadmap. Você molda o produto que vai usar.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="guarantee-card">
+      <div style="font-size:13px;font-weight:700;color:var(--text-dim);letter-spacing:1px;margin-bottom:16px;">📅 ROADMAP — 60 DIAS</div>
+      <div class="roadmap-mini">
+        <div class="roadmap-item done">
+          <div class="roadmap-phase" style="color:var(--green)">✅ PRONTO</div>
+          <div class="roadmap-desc" style="font-size:12px;">Landing, formulário IA, score, painel admin, API agentes</div>
+          <div class="roadmap-date">Agora</div>
+        </div>
+        <div class="roadmap-item building">
+          <div class="roadmap-phase" style="color:var(--yellow)">🔨 30 DIAS</div>
+          <div class="roadmap-desc" style="font-size:12px;">Bot WhatsApp completo + onboarding automático</div>
+          <div class="roadmap-date">Maio/26</div>
+        </div>
+        <div class="roadmap-item building">
+          <div class="roadmap-phase" style="color:var(--yellow)">🚀 60 DIAS</div>
+          <div class="roadmap-desc" style="font-size:12px;">Anti-spam IA + multi-grupos + analytics + lançamento</div>
+          <div class="roadmap-date">Jun/26</div>
+        </div>
+        <div class="roadmap-item soon">
+          <div class="roadmap-phase" style="color:var(--text-dim)">📈 90 DIAS</div>
+          <div class="roadmap-desc" style="font-size:12px;">White label + CRM + mobile app admin</div>
+          <div class="roadmap-date">Jul/26</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 11 — OS FUNDADORES
+══════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="section-header">
+    <div class="section-tag">FUNDADORES</div>
+    <h2 class="section-title">3 vagas já <span class="green">confirmadas.</span></h2>
+    <p class="section-sub">Restam 7 vagas de fundador. Quem entra agora, ganha para sempre.</p>
+  </div>
+
+  <div class="founders-grid">
+    <div class="founder-card featured">
+      <div class="founder-avatar" style="background:rgba(255,170,0,0.12);">🎯</div>
+      <div class="founder-name">Fernando Paixão</div>
+      <div class="founder-role">Mentor · 385 grupos de networking</div>
+      <div class="founder-plan">ENTERPRISE FUNDADOR</div>
+      <div class="founder-price">R$1.497<sub>/mês</sub></div>
+      <div class="founder-upfront">6 meses: <strong>R$ 8.982</strong></div>
+      <div class="founder-why">385 grupos + rede massiva de networking = o parceiro fundador ideal. Indica clientes, escala o produto junto.</div>
+    </div>
+
+    <div class="founder-card">
+      <div class="founder-avatar" style="background:rgba(0,255,136,0.1);">🏟️</div>
+      <div class="founder-name">Thiago / Coliseu</div>
+      <div class="founder-role">Comunidade Premium · Fila de espera infinita</div>
+      <div class="founder-plan">PRO FUNDADOR</div>
+      <div class="founder-price" style="color:var(--green)">R$497<sub>/mês</sub></div>
+      <div class="founder-upfront">6 meses: <strong>R$ 2.982</strong></div>
+      <div class="founder-why">Precisa urgente de automação para dar vazão à fila de espera e manter a qualidade da comunidade.</div>
+    </div>
+
+    <div class="founder-card">
+      <div class="founder-avatar" style="background:rgba(0,170,255,0.1);">🌎</div>
+      <div class="founder-name">Kelly / Entre Sócias</div>
+      <div class="founder-role">Network Internacional · Alto volume</div>
+      <div class="founder-plan">PRO FUNDADOR</div>
+      <div class="founder-price" style="color:var(--green)">R$497<sub>/mês</sub></div>
+      <div class="founder-upfront">6 meses: <strong>R$ 2.982</strong></div>
+      <div class="founder-why">Network internacional com dezenas de grupos — impossível manter qualidade sem automação inteligente.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;text-align:center;z-index:1;">
+    <div style="display:inline-flex;align-items:center;gap:16px;background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:14px;padding:14px 28px;">
+      <span style="font-size:22px;font-weight:800;font-family:'Space Grotesk',sans-serif;color:var(--green);">R$ 14.946</span>
+      <span style="font-size:13px;color:var(--text-dim);">gerados na pré-venda · produto entrega em 60 dias · desenvolvimento financiado pelos fundadores</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 12 — CTA FINAL
+══════════════════════════════════════════════════════════ -->
+<div class="slide centered">
+  <div class="cta-orb"></div>
+  <div class="cta-ring" style="width:800px;height:800px;border:1px solid rgba(0,255,136,0.05);"></div>
+
+  <div class="cta-content">
+    <div class="founder-badge" style="animation:none;">🏆 ÚLTIMAS VAGAS — OFERTA FUNDADOR</div>
+
+    <h2 class="cta-title">
+      Trava 50% de desconto<br>
+      <span style="color:var(--green)">para sempre</span><br>
+      <span style="color:var(--text-dim);font-size:0.75em;">antes que as vagas acabem.</span>
+    </h2>
+
+    <p class="cta-sub">
+      Produto lança em 60 dias.<br>
+      Fundadores pagam <strong style="color:var(--gold)">R$1.497/mês vitalício</strong> — preço normal será R$2.997/mês.
+    </p>
+
+    <div class="urgency-box">
+      <div class="num">7</div>
+      <div class="txt">
+        <strong>vagas restantes</strong><br>
+        de 10 totais · 3 já confirmadas
+      </div>
+    </div>
+
+    <div class="vagas-visual">
+      <div class="vaga-v tomado">✕</div>
+      <div class="vaga-v tomado">✕</div>
+      <div class="vaga-v tomado">✕</div>
+      <div class="vaga-v livre">○</div>
+      <div class="vaga-v livre">○</div>
+      <div class="vaga-v livre">○</div>
+      <div class="vaga-v livre">○</div>
+      <div class="vaga-v livre">○</div>
+      <div class="vaga-v livre">○</div>
+      <div class="vaga-v livre">○</div>
+    </div>
+
+    <div class="cta-buttons">
+      <button class="btn-gold" style="font-size:17px;padding:20px 48px;">Quero ser Fundador Enterprise →</button>
+      <button class="btn-ghost" onclick="goTo(0)">Ver do início</button>
+    </div>
+
+    <div class="cta-note">
+      📱 Ou fale direto: <strong style="color:var(--green)">Entre em contato pelo WhatsApp</strong> · Contrato + NF garantidos
+    </div>
+  </div>
+</div>
+
+</div><!-- /slider -->
+
+<div class="nav" id="nav">
+  <button class="nav-btn" onclick="prev()">←</button>
+  <div id="dots"></div>
+  <button class="nav-btn" onclick="next()">→</button>
+</div>
+
+<script>
+  const totalSlides = 12;
+  let current = 0;
+  const slider = document.getElementById('slider');
+  const dotsContainer = document.getElementById('dots');
+
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    dotsContainer.appendChild(dot);
+  }
+
+  function goTo(n) {
+    current = Math.max(0, Math.min(n, totalSlides - 1));
+    slider.style.transform = `translateX(-${current * 100}vw)`;
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+  });
+
+  let touchStart = 0;
+  document.addEventListener('touchstart', e => { touchStart = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const diff = touchStart - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+  });
+</script>
+</body>
+</html>
